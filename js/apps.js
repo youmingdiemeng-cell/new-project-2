@@ -64,11 +64,7 @@ function openChat(contactId) {
   });
 
   const showReplies = contactId === 'mystery' && GameState.foundClues.includes('radio_87.9_heard');
-  const showInput = contactId === 'unknown' && (
-    GameState.foundClues.includes('radio_87.9_heard') ||
-    GameState.foundClues.includes('diary_read') ||
-    GameState.gamePhase >= 2
-  );
+  const showInput = contactId === 'unknown' && GameState.foundClues.includes('radio_87.9_heard');
   let replyHtml = '';
   if (showReplies) {
     replyHtml = `

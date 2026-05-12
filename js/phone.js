@@ -16,6 +16,7 @@ const PHONE_BASE_HEIGHT = 809.5;
 const DEVICE_MOBILE_CLASS = 'device-mobile';
 const DEVICE_DESKTOP_CLASS = 'device-desktop';
 const FLOATING_KEYBOARD_MARGIN = 12;
+const GAME_CLOCK_START_MINUTES = (23 * 60) + 47;
 
 let activeMobileInput = null;
 let activeMobileInputStyle = '';
@@ -23,6 +24,59 @@ let activeKeyboardAnchor = null;
 let activeKeyboardAnchorStyle = '';
 let keyboardHandlingBound = false;
 let baseMobileViewportHeight = 0;
+let gameClockTimerId = null;
+
+function ensureGameClockStarted() {
+  if (GameState.gameClockStartedAt) return;
+  GameState.gameClockStartedAt = Date.now();
+  GameState.save();
+}
+
+function getCurrentGameTime() {
+  const startedAt = GameState.gameClockStartedAt || Date.now();
+  const elapsedMinutes = Math.floor(Math.max(0, Date.now() - startedAt) / 60000);
+  const totalMinutes = (GAME_CLOCK_START_MINUTES + elapsedMinutes) % (24 * 60);
+  const hours = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
+  const minutes = String(totalMinutes % 60).padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
+function updateGameClockDisplay() {
+  const formattedTime = getCurrentGameTime();
+  const statusTime = document.querySelector('.status-time');
+  if (statusTime) {
+    statusTime.textContent = formattedTime;
+  }
+
+  const homeTime = document.getElementById('homeScreenTime') || document.querySelector('.home-header span:last-child');
+  if (homeTime) {
+    homeTime.textContent = `深夜 ${formattedTime}`;
+  }
+}
+
+function scheduleGameClockTick() {
+  if (gameClockTimerId) {
+    window.clearTimeout(gameClockTimerId);
+    gameClockTimerId = null;
+  }
+
+  if (!GameState.gameClockStartedAt) return;
+
+  const elapsedMs = Math.max(0, Date.now() - GameState.gameClockStartedAt);
+  const remainder = elapsedMs % 60000;
+  const delay = remainder === 0 ? 60000 : 60000 - remainder;
+
+  gameClockTimerId = window.setTimeout(() => {
+    updateGameClockDisplay();
+    scheduleGameClockTick();
+  }, delay);
+}
+
+function startGameClock() {
+  ensureGameClockStarted();
+  updateGameClockDisplay();
+  scheduleGameClockTick();
+}
 
 function isMobileGameDevice() {
   const ua = navigator.userAgent || '';
@@ -216,13 +270,14 @@ function bindMobileKeyboardHandling() {
 
 function renderPhoneShell() {
   const app = document.getElementById('app');
+  const currentTime = getCurrentGameTime();
   app.innerHTML = `
     <div class="phone-container" id="phoneContainer">
       <div class="phone-frame" id="phoneFrame">
         <div class="phone-screen">
           <div class="status-bar">
             <div class="status-left">
-              <span class="status-time">23:47</span>
+              <span class="status-time">${currentTime}</span>
             </div>
             <div class="status-right">
               <span>🌙</span>
@@ -236,6 +291,8 @@ function renderPhoneShell() {
   bindMobileKeyboardHandling();
   applyPhoneViewportLayout();
   renderHomeScreen();
+  updateGameClockDisplay();
+  startGameClock();
 }
 
 function renderHomeScreen() {
@@ -322,6 +379,7 @@ function openApp(appId) {
 
 function goHome() {
   renderHomeScreen();
+  updateGameClockDisplay();
   GameState.save();
 }
 

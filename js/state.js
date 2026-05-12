@@ -1,6 +1,6 @@
 // js/state.js — game state management with localStorage persistence
 
-const GAME_VERSION = '2.2';
+const GAME_VERSION = '2.3';
 
 const GameState = {
   currentApp: null,
@@ -15,6 +15,7 @@ const GameState = {
   memberLoggedIn: false,
   memberAccount: null,
   adminLoggedIn: false,
+  gameClockStartedAt: null,
 
   save() {
     try {
@@ -32,6 +33,7 @@ const GameState = {
         memberLoggedIn: this.memberLoggedIn,
         memberAccount: this.memberAccount,
         adminLoggedIn: this.adminLoggedIn,
+        gameClockStartedAt: this.gameClockStartedAt,
       }));
       localStorage.removeItem('gameSave');
     } catch (e) {
@@ -75,6 +77,7 @@ const GameState = {
     this.memberLoggedIn = false;
     this.memberAccount = null;
     this.adminLoggedIn = false;
+    this.gameClockStartedAt = null;
     this.save();
   }
 };
