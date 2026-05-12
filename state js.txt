@@ -1,0 +1,67 @@
+// js/state.js — game state management with localStorage persistence
+
+const GAME_VERSION = '2.2';
+
+const GameState = {
+  currentApp: null,
+  unlockedContent: {},
+  foundClues: [],
+  searchQueries: [],
+  puzzleProgress: {},
+  gamePhase: 1,
+  endingTriggered: false,
+  fineTuneUnlocked: false,
+  memberLoggedIn: false,
+  adminLoggedIn: false,
+
+  save() {
+    try {
+      localStorage.setItem('gameSave', JSON.stringify({
+        _version: GAME_VERSION,
+        currentApp: this.currentApp,
+        unlockedContent: this.unlockedContent,
+        foundClues: this.foundClues,
+        searchQueries: this.searchQueries,
+        puzzleProgress: this.puzzleProgress,
+        gamePhase: this.gamePhase,
+        endingTriggered: this.endingTriggered,
+        fineTuneUnlocked: this.fineTuneUnlocked,
+        memberLoggedIn: this.memberLoggedIn,
+        adminLoggedIn: this.adminLoggedIn,
+      }));
+    } catch (e) {
+      console.warn('Save failed:', e);
+    }
+  },
+
+  load() {
+    try {
+      const saved = localStorage.getItem('gameSave');
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data._version !== GAME_VERSION) {
+          this.reset();
+          return;
+        }
+        Object.assign(this, data);
+      }
+    } catch (e) {
+      console.warn('Load failed:', e);
+    }
+  },
+
+  reset() {
+    localStorage.removeItem('gameSave');
+    this.currentApp = null;
+    this.unlockedContent = {};
+    this.foundClues = [];
+    this.searchQueries = [];
+    this.puzzleProgress = {};
+    this.gamePhase = 1;
+    this.endingTriggered = false;
+    this.fineTuneUnlocked = false;
+    this.memberLoggedIn = false;
+    this.adminLoggedIn = false;
+    this.save();
+  }
+};
