@@ -6,7 +6,7 @@
   flex-direction: column;
   height: calc(100% - 40px);
   color: #fff;
-  font-size: 20px;
+  font-size: calc(20px * var(--shell-scale, 1));
 }
 
 .app-header {
@@ -22,13 +22,13 @@
   background: none;
   border: none;
   color: #007aff;
-  font-size: 26px;
+  font-size: calc(26px * var(--shell-scale, 1));
   cursor: pointer;
   padding: 0 4px;
 }
 
 .app-title {
-  font-size: 22px;
+  font-size: calc(22px * var(--shell-scale, 1));
   font-weight: 600;
 }
 
@@ -36,63 +36,166 @@
   flex: 1;
   overflow-y: auto;
   padding: 12px 16px;
-  font-size: 20px;
+  font-size: calc(20px * var(--shell-scale, 1));
 }
 
 /* Global bump for inline font-size values written directly in JS templates */
 #introOverlay [style*="font-size:10px"],
 .phone-screen [style*="font-size:10px"] {
-  font-size: 15px !important;
+  font-size: calc(15px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:11px"],
 .phone-screen [style*="font-size:11px"] {
-  font-size: 16px !important;
+  font-size: calc(16px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:12px"],
 .phone-screen [style*="font-size:12px"] {
-  font-size: 17px !important;
+  font-size: calc(17px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:13px"],
 .phone-screen [style*="font-size:13px"] {
-  font-size: 18px !important;
+  font-size: calc(18px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:14px"],
 .phone-screen [style*="font-size:14px"] {
-  font-size: 19px !important;
+  font-size: calc(19px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:16px"],
 .phone-screen [style*="font-size:16px"] {
-  font-size: 21px !important;
+  font-size: calc(21px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:17px"],
 .phone-screen [style*="font-size:17px"] {
-  font-size: 22px !important;
+  font-size: calc(22px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:19px"],
 .phone-screen [style*="font-size:19px"] {
-  font-size: 24px !important;
+  font-size: calc(24px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:20px"],
 .phone-screen [style*="font-size:20px"] {
-  font-size: 25px !important;
+  font-size: calc(25px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:22px"],
 .phone-screen [style*="font-size:22px"] {
-  font-size: 27px !important;
+  font-size: calc(27px * var(--shell-scale, 1)) !important;
 }
 
 #introOverlay [style*="font-size:28px"],
 .phone-screen [style*="font-size:28px"] {
-  font-size: 33px !important;
+  font-size: calc(33px * var(--shell-scale, 1)) !important;
+}
+
+.phone-screen input,
+.phone-screen textarea,
+.phone-screen select,
+.phone-screen button {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.keyboard-anchor {
+  display: flex;
+  align-items: center;
+  gap: calc(8px * var(--shell-scale, 1));
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.keyboard-anchor > input,
+.keyboard-anchor > textarea,
+.keyboard-anchor > select,
+.keyboard-anchor > .ui-field {
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.keyboard-anchor > button,
+.keyboard-anchor > .ui-action {
+  flex: 0 1 auto;
+  max-width: 42%;
+  white-space: nowrap;
+}
+
+.ui-field {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: calc(10px * var(--shell-scale, 1)) calc(14px * var(--shell-scale, 1));
+  border-radius: calc(10px * var(--shell-scale, 1));
+  border: max(1px, calc(1px * var(--shell-scale, 1))) solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: calc(14px * var(--shell-scale, 1));
+  outline: none;
+}
+
+.ui-field.ui-field-pill {
+  padding-inline: calc(12px * var(--shell-scale, 1));
+  border-radius: calc(18px * var(--shell-scale, 1));
+}
+
+.ui-field.ui-field-compact {
+  padding-block: calc(8px * var(--shell-scale, 1));
+  padding-inline: calc(10px * var(--shell-scale, 1));
+  border-radius: calc(8px * var(--shell-scale, 1));
+  font-size: calc(12px * var(--shell-scale, 1));
+}
+
+.ui-field.ui-field-mono {
+  font-family: monospace;
+}
+
+.ui-field.ui-field-center {
+  text-align: center;
+}
+
+.ui-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(10px * var(--shell-scale, 1)) calc(18px * var(--shell-scale, 1));
+  border-radius: calc(10px * var(--shell-scale, 1));
+  border: none;
+  background: #007aff;
+  color: #fff;
+  font-size: calc(13px * var(--shell-scale, 1));
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ui-action.ui-action-pill {
+  padding-inline: calc(16px * var(--shell-scale, 1));
+  border-radius: calc(18px * var(--shell-scale, 1));
+}
+
+.ui-action.ui-action-compact {
+  padding-block: calc(8px * var(--shell-scale, 1));
+  padding-inline: calc(14px * var(--shell-scale, 1));
+  border-radius: calc(8px * var(--shell-scale, 1));
+  font-size: calc(12px * var(--shell-scale, 1));
+}
+
+.ui-action.ui-action-full {
+  width: 100%;
+}
+
+.ui-action.ui-action-ghost {
+  background: none;
+  color: rgba(255,255,255,0.4);
 }
 
 /* Messages / Chat Styles */
@@ -125,7 +228,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
   flex-shrink: 0;
 }
 
@@ -135,13 +238,13 @@
 }
 
 .chat-name {
-  font-size: 20px;
+  font-size: calc(20px * var(--shell-scale, 1));
   font-weight: 500;
   margin-bottom: 2px;
 }
 
 .chat-preview {
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.45);
   white-space: nowrap;
   overflow: hidden;
@@ -151,7 +254,7 @@
 .unread-badge {
   background: #ff3b30;
   color: white;
-  font-size: 14px;
+  font-size: calc(14px * var(--shell-scale, 1));
   font-weight: 700;
   min-width: 18px;
   height: 18px;
@@ -182,7 +285,7 @@
   max-width: 80%;
   padding: 10px 14px;
   border-radius: 18px;
-  font-size: 19px;
+  font-size: calc(19px * var(--shell-scale, 1));
   line-height: 1.4;
   word-wrap: break-word;
 }
@@ -202,7 +305,7 @@
 }
 
 .message-time {
-  font-size: 15px;
+  font-size: calc(15px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.35);
   margin-top: 2px;
   padding: 0 4px;
@@ -226,7 +329,7 @@
   color: #007aff;
   padding: 8px 14px;
   border-radius: 18px;
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -275,6 +378,7 @@
   flex-direction: column;
   align-items: center;
   padding: 24px 16px;
+  min-height: 0;
 }
 
 .radio-display {
@@ -285,10 +389,11 @@
   margin: 16px 0;
   text-align: center;
   min-width: 200px;
+  flex-shrink: 0;
 }
 
 .radio-frequency {
-  font-size: 49px;
+  font-size: calc(49px * var(--shell-scale, 1));
   font-weight: 300;
   font-family: 'Courier New', monospace;
   color: #fff;
@@ -301,7 +406,7 @@
 }
 
 .radio-band {
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.3);
   margin-top: 4px;
 }
@@ -311,6 +416,7 @@
   align-items: center;
   gap: 16px;
   margin: 16px 0;
+  flex-shrink: 0;
 }
 
 .radio-btn {
@@ -320,7 +426,7 @@
   border: none;
   background: rgba(255,255,255,0.08);
   color: #fff;
-  font-size: 20px;
+  font-size: calc(20px * var(--shell-scale, 1));
   cursor: pointer;
   transition: background 0.2s;
   display: flex;
@@ -341,10 +447,13 @@
   width: 100%;
   padding: 16px;
   text-align: center;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .radio-text {
-  font-size: 19px;
+  font-size: calc(19px * var(--shell-scale, 1));
   line-height: 1.8;
   color: rgba(255,255,255,0.8);
   animation: fadeIn 1s ease;
@@ -355,7 +464,7 @@
 
 .radio-static {
   color: rgba(255,255,255,0.15);
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
   font-family: 'Courier New', monospace;
   line-height: 1.4;
   animation: staticFlicker 0.5s infinite;
@@ -370,10 +479,14 @@
   width: 100%;
   border-top: 1px solid rgba(255,255,255,0.06);
   padding: 12px 16px;
+  flex: 0 0 calc(124px * var(--shell-scale, 1));
+  min-height: calc(124px * var(--shell-scale, 1));
+  max-height: calc(124px * var(--shell-scale, 1));
+  overflow: hidden;
 }
 
 .radio-history-title {
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.3);
   margin-bottom: 8px;
   text-transform: uppercase;
@@ -381,16 +494,17 @@
 }
 
 .history-item {
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.4);
   padding: 4px 0;
   font-family: 'Courier New', monospace;
 }
 
 .now-playing {
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.3);
   margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 /* Gallery App Styles */
@@ -407,7 +521,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: calc(32px * var(--shell-scale, 1));
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -418,14 +532,14 @@
   background: rgba(255,255,255,0.03);
 }
 .gallery-item.locked::after {
-  content: '🔒';
+  content: '\1F512';
   position: absolute;
-  font-size: 24px;
+  font-size: calc(24px * var(--shell-scale, 1));
   opacity: 0.6;
 }
 
 .gallery-caption {
-  font-size: 15px;
+  font-size: calc(15px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.4);
   padding: 8px 12px;
 }
@@ -461,7 +575,7 @@
 
 .lightbox-caption {
   color: rgba(255,255,255,0.6);
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
   margin-top: 16px;
   text-align: center;
   line-height: 1.7;
@@ -474,7 +588,7 @@
   background: none;
   border: none;
   color: rgba(255,255,255,0.6);
-  font-size: 24px;
+  font-size: calc(24px * var(--shell-scale, 1));
   cursor: pointer;
 }
 
@@ -492,14 +606,14 @@
 }
 
 .password-modal input {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.2);
+  padding: calc(10px * var(--shell-scale, 1)) calc(16px * var(--shell-scale, 1));
+  border-radius: calc(10px * var(--shell-scale, 1));
+  border: max(1px, calc(1px * var(--shell-scale, 1))) solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.08);
   color: #fff;
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   text-align: center;
-  width: 200px;
+  width: min(calc(220px * var(--shell-scale, 1)), calc(100% - 32px));
   outline: none;
 }
 .password-modal input:focus {
@@ -507,18 +621,18 @@
 }
 
 .password-modal button {
-  padding: 8px 24px;
-  border-radius: 10px;
+  padding: calc(8px * var(--shell-scale, 1)) calc(24px * var(--shell-scale, 1));
+  border-radius: calc(10px * var(--shell-scale, 1));
   border: none;
   background: #007aff;
   color: #fff;
-  font-size: 14px;
+  font-size: calc(14px * var(--shell-scale, 1));
   cursor: pointer;
 }
 
 .pw-error {
   color: #ff3b30;
-  font-size: 12px;
+  font-size: calc(12px * var(--shell-scale, 1));
 }
 
 /* Browser App Styles */
@@ -535,9 +649,9 @@
 
 .browser-tab {
   flex: 1;
-  padding: 10px;
+  padding: calc(10px * var(--shell-scale, 1));
   text-align: center;
-  font-size: 12px;
+  font-size: calc(14px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.4);
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -562,13 +676,13 @@
 .browser-item:active { background: rgba(255,255,255,0.05); }
 
 .browser-item-query {
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
   color: #fff;
   margin-bottom: 2px;
 }
 
 .browser-item-meta {
-  font-size: 15px;
+  font-size: calc(15px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.3);
 }
 
@@ -590,17 +704,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   flex-shrink: 0;
 }
 
 .bookmark-title {
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
   color: #fff;
 }
 
 .bookmark-url {
-  font-size: 15px;
+  font-size: calc(15px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.3);
 }
 
@@ -636,7 +750,7 @@
   padding: 6px 10px;
   background: rgba(0,0,0,0.4);
   border-radius: 6px;
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.45);
   font-family: 'Courier New', monospace;
 }
@@ -648,7 +762,7 @@
 .webpage-body {
   flex: 1;
   padding: 16px;
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
   line-height: 2;
   color: rgba(255,255,255,0.7);
   white-space: pre-line;
@@ -688,7 +802,7 @@
 }
 
 .radio-hero .freq {
-  font-size: 42px;
+  font-size: calc(42px * var(--shell-scale, 1));
   font-weight: 200;
   color: #fff;
   letter-spacing: 3px;
@@ -702,7 +816,7 @@
 }
 
 .radio-hero .tagline {
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.35);
   margin-top: 6px;
   letter-spacing: 4px;
@@ -710,7 +824,7 @@
 }
 
 .radio-hero .sub {
-  font-size: 11px;
+  font-size: calc(11px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.2);
   margin-top: 10px;
   letter-spacing: 1px;
@@ -722,7 +836,7 @@
 }
 
 .radio-section-title {
-  font-size: 11px;
+  font-size: calc(11px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.25);
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -743,7 +857,7 @@
 
 .schedule-time {
   width: 48px;
-  font-size: 12px;
+  font-size: calc(12px * var(--shell-scale, 1));
   font-weight: 600;
   color: rgba(255,255,255,0.5);
   font-family: monospace;
@@ -752,7 +866,7 @@
 }
 
 .schedule-name {
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.7);
 }
 
@@ -778,14 +892,14 @@
 
 .schedule-time {
   width: 50px;
-  font-size: 12px;
+  font-size: calc(12px * var(--shell-scale, 1));
   font-weight: 600;
   color: rgba(255,255,255,0.5);
   font-family: monospace;
 }
 
 .schedule-name {
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.7);
 }
 
@@ -811,7 +925,7 @@
   border: 1px solid rgba(255,216,77,0.22);
   border-radius: 12px;
   color: #ffd84d !important;
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -824,15 +938,15 @@
 }
 
 .radio-nav a:last-child {
-  color: rgba(255,216,77,0.72) !important;
-  font-size: 11px;
-  border-color: rgba(255,216,77,0.12);
+  color: #ffd84d !important;
+  font-size: calc(13px * var(--shell-scale, 1));
+  border-color: rgba(255,216,77,0.22);
 }
 
 .radio-footer {
   padding: 14px 0;
   margin: 0 -16px -16px;
-  font-size: 10px;
+  font-size: calc(10px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.15);
   text-align: center;
   border-top: 1px solid rgba(255,255,255,0.03);
@@ -854,13 +968,13 @@
 .note-item:active { background: rgba(255,255,255,0.03); }
 
 .note-title {
-  font-size: 19px;
+  font-size: calc(19px * var(--shell-scale, 1));
   color: #fff;
   margin-bottom: 4px;
 }
 
 .note-text {
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.45);
   white-space: nowrap;
   overflow: hidden;
@@ -869,7 +983,7 @@
 
 .note-locked {
   color: rgba(255,255,255,0.2);
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
 }
 
 .note-detail {
@@ -880,7 +994,7 @@
   white-space: pre-line;
   word-break: break-word;
   overflow-wrap: break-word;
-  font-size: 19px;
+  font-size: calc(19px * var(--shell-scale, 1));
   line-height: 1.9;
   color: rgba(255,255,255,0.8);
 }
@@ -901,7 +1015,7 @@
 }
 
 .call-icon {
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   width: 28px;
   text-align: center;
 }
@@ -911,12 +1025,12 @@
 }
 
 .call-contact {
-  font-size: 14px;
+  font-size: calc(14px * var(--shell-scale, 1));
   color: #fff;
 }
 
 .call-meta {
-  font-size: 11px;
+  font-size: calc(11px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.35);
 }
 
@@ -935,13 +1049,13 @@
 .mail-item:active { background: rgba(255,255,255,0.03); }
 
 .mail-from {
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.4);
   margin-bottom: 2px;
 }
 
 .mail-subject {
-  font-size: 19px;
+  font-size: calc(19px * var(--shell-scale, 1));
   color: #fff;
   margin-bottom: 2px;
 }
@@ -954,7 +1068,7 @@
   white-space: pre-line;
   word-break: break-word;
   overflow-wrap: break-word;
-  font-size: 19px;
+  font-size: calc(19px * var(--shell-scale, 1));
   line-height: 1.9;
   color: rgba(255,255,255,0.8);
 }
@@ -974,7 +1088,7 @@
   border: none;
   background: rgba(255,255,255,0.08);
   color: #fff;
-  font-size: 22px;
+  font-size: calc(22px * var(--shell-scale, 1));
   font-weight: 300;
   cursor: pointer;
   transition: background 0.15s;
@@ -1012,7 +1126,7 @@
   border: 1px solid rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.06);
   color: #fff;
-  font-size: 14px;
+  font-size: calc(14px * var(--shell-scale, 1));
   outline: none;
 }
 .snoop-input:focus {
@@ -1025,7 +1139,7 @@
   border: none;
   background: #af52de;
   color: #fff;
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -1046,7 +1160,7 @@
 }
 
 .snoop-result-type {
-  font-size: 10px;
+  font-size: calc(10px * var(--shell-scale, 1));
   color: rgba(175,82,222,0.6);
   margin-bottom: 2px;
   text-transform: uppercase;
@@ -1054,7 +1168,7 @@
 }
 
 .snoop-result-content {
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.8);
   line-height: 1.4;
 }
@@ -1088,14 +1202,14 @@
 }
 
 .snoop-history-title {
-  font-size: 10px;
+  font-size: calc(10px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.25);
   letter-spacing: 1px;
   margin-bottom: 6px;
 }
 
 .snoop-history-item {
-  font-size: 11px;
+  font-size: calc(11px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.3);
   font-family: 'Courier New', monospace;
   padding: 2px 0;
@@ -1104,13 +1218,13 @@
 .snoop-empty {
   text-align: center;
   color: rgba(255,255,255,0.2);
-  font-size: 13px;
+  font-size: calc(13px * var(--shell-scale, 1));
   margin-top: 40px;
   line-height: 1.8;
 }
 
 .snoop-progress {
-  font-size: 10px;
+  font-size: calc(10px * var(--shell-scale, 1));
   color: rgba(255,255,255,0.2);
   text-align: center;
   margin-bottom: 12px;
@@ -1119,7 +1233,7 @@
 .snoop-unlock-toast {
   text-align: center;
   color: #ffcc00;
-  font-size: 12px;
+  font-size: calc(12px * var(--shell-scale, 1));
   padding: 8px 16px;
   margin: 0 16px 8px;
   background: rgba(255, 204, 0, 0.1);
@@ -1154,4 +1268,5 @@
     padding: 10px 10px;
   }
 }
+
 

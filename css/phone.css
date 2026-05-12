@@ -9,8 +9,8 @@ body,
 }
 
 :root {
-  --phone-base-width: 320;
-  --phone-base-height: 680;
+  --phone-base-width: 370.5;
+  --phone-base-height: 809.5;
   --phone-safe-gap: 24px;
 }
 
@@ -42,7 +42,7 @@ body {
   );
   width: calc(var(--phone-base-width) * 1px * var(--phone-scale));
   height: calc(var(--phone-base-height) * 1px * var(--phone-scale));
-  aspect-ratio: 320 / 680;
+  aspect-ratio: 74.1 / 161.9;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -51,11 +51,12 @@ body {
 }
 
 .phone-frame {
+  --phone-hardware-scale: calc(var(--phone-base-width) / 320);
   width: calc(var(--phone-base-width) * 1px);
   height: calc(var(--phone-base-height) * 1px);
   background: #0a0a0a;
-  border-radius: 40px;
-  padding: 12px;
+  border-radius: calc(40px * var(--phone-hardware-scale));
+  padding: calc(14px * var(--phone-hardware-scale));
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 2px #2a2a2a;
   position: absolute;
   top: 0;
@@ -96,13 +97,13 @@ body.device-mobile .phone-notch {
 
 .phone-notch {
   position: absolute;
-  top: 12px;
+  top: calc(13px * var(--phone-hardware-scale, 1));
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 24px;
+  width: calc(132px * var(--phone-hardware-scale, 1));
+  height: calc(26px * var(--phone-hardware-scale, 1));
   background: #0a0a0a;
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 calc(16px * var(--phone-hardware-scale, 1)) calc(16px * var(--phone-hardware-scale, 1));
   z-index: 10;
 }
 
@@ -125,7 +126,7 @@ body.device-mobile .phone-notch {
   width: 100%;
   height: 100%;
   background: #121212;
-  border-radius: 28px;
+  border-radius: calc(30px * var(--phone-hardware-scale, 1));
   overflow: hidden;
   position: relative;
   transition: transform 0.1s;
@@ -145,10 +146,17 @@ body.device-mobile .phone-screen {
   flex: 1;
   overflow: hidden;
   width: 100%;
+  min-width: 0;
 }
 
-.keyboard-floating-field {
+.keyboard-floating-anchor {
   box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+
+body.device-desktop .phone-container,
+body.device-desktop .phone-frame,
+body.device-desktop .phone-screen {
+  overflow: hidden;
 }
 
 /* Status Bar */
@@ -158,12 +166,12 @@ body.device-mobile .phone-screen {
   align-items: center;
   padding: 14px 20px 0;
   color: #fff;
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
   height: 40px;
 }
 
 .status-time {
-  font-size: 20px;
+  font-size: calc(20px * var(--shell-scale, 1));
   font-weight: 700;
   font-family: -apple-system, sans-serif;
 }
@@ -172,7 +180,7 @@ body.device-mobile .phone-screen {
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 16px;
+  font-size: calc(16px * var(--shell-scale, 1));
 }
 
 /* Home Screen */
@@ -194,7 +202,7 @@ body.device-mobile .phone-screen {
 
 .home-header-text {
   color: rgba(255,255,255,0.4);
-  font-size: 18px;
+  font-size: calc(18px * var(--shell-scale, 1));
 }
 
 /* Dock 4 columns for dock apps */
@@ -222,7 +230,7 @@ body.device-mobile .phone-screen {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: calc(6px * var(--shell-scale, 1));
   cursor: pointer;
   transition: transform 0.15s;
   -webkit-tap-highlight-color: transparent;
@@ -232,13 +240,13 @@ body.device-mobile .phone-screen {
 }
 
 .app-icon-inner {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
+  width: calc(60px * var(--shell-scale, 1));
+  height: calc(60px * var(--shell-scale, 1));
+  border-radius: calc(16px * var(--shell-scale, 1));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: calc(24px * var(--shell-scale, 1));
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   position: relative;
   overflow: hidden;
@@ -246,9 +254,9 @@ body.device-mobile .phone-screen {
 
 .app-label {
   color: rgba(255,255,255,0.8);
-  font-size: 17px;
+  font-size: calc(17px * var(--shell-scale, 1));
   text-align: center;
-  max-width: 74px;
+  max-width: calc(74px * var(--shell-scale, 1));
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -260,11 +268,11 @@ body.device-mobile .phone-screen {
   right: -3px;
   background: #ff3b30;
   color: white;
-  font-size: 14px;
+  font-size: calc(14px * var(--shell-scale, 1));
   font-weight: 700;
-  width: 18px;
-  height: 18px;
-  border-radius: 9px;
+  width: calc(18px * var(--shell-scale, 1));
+  height: calc(18px * var(--shell-scale, 1));
+  border-radius: calc(9px * var(--shell-scale, 1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,7 +299,7 @@ body.device-mobile .phone-screen {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: calc(32px * var(--shell-scale, 1));
   color: #444;
 }
 

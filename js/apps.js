@@ -64,7 +64,11 @@ function openChat(contactId) {
   });
 
   const showReplies = contactId === 'mystery' && GameState.foundClues.includes('radio_87.9_heard');
-  const showInput = contactId === 'unknown' && GameState.foundClues.includes('radio_87.9_heard');
+  const showInput = contactId === 'unknown' && (
+    GameState.foundClues.includes('radio_87.9_heard') ||
+    GameState.foundClues.includes('diary_read') ||
+    GameState.gamePhase >= 2
+  );
   let replyHtml = '';
   if (showReplies) {
     replyHtml = `
@@ -76,9 +80,9 @@ function openChat(contactId) {
     `;
   } else if (showInput) {
     replyHtml = `
-      <div class="chat-reply-bar" style="flex-wrap:nowrap;gap:6px;">
-        <input type="text" id="chatInput" placeholder="对方在等你说出那句话…" style="flex:1;padding:10px 12px;border-radius:18px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')sendChatMessage()">
-        <button onclick="sendChatMessage()" style="padding:10px 16px;border-radius:18px;border:none;background:#007aff;color:#fff;font-size:12px;cursor:pointer;">发送</button>
+      <div class="chat-reply-bar keyboard-anchor">
+        <input type="text" id="chatInput" class="ui-field ui-field-pill" placeholder="对方在等你说出那句话…" onkeydown="if(event.key==='Enter')sendChatMessage()">
+        <button class="ui-action ui-action-pill" onclick="sendChatMessage()">发送</button>
       </div>
     `;
   }
@@ -100,6 +104,12 @@ function openChat(contactId) {
 
   const msgsDiv = document.querySelector('.chat-messages');
   if (msgsDiv) msgsDiv.scrollTop = msgsDiv.scrollHeight;
+  if (showInput) {
+    setTimeout(() => {
+      const inputEl = document.getElementById('chatInput');
+      if (inputEl) inputEl.focus();
+    }, 80);
+  }
 }
 
 function sendReply(contactId, text) {
@@ -183,7 +193,7 @@ function renderRadioApp() {
   }
 
   let historyHtml = '';
-  RADIO_DATA.listeningHistory.forEach(h => {
+  RADIO_DATA.listeningHistory.slice(-3).reverse().forEach(h => {
     historyHtml += `<div class="history-item">${h.date} ${h.time} — ${h.freq} MHz</div>`;
   });
 
@@ -257,9 +267,9 @@ function renderBrowserApp() {
         <span class="app-title">浏览器</span>
       </div>
       <div class="browser-view">
-        <div class="browser-url-bar" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;">
-          <input type="text" id="urlInput" value="${urlValue}" placeholder="输入网址…" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff;font-size:12px;font-family:monospace;outline:none;" onkeydown="if(event.key==='Enter')navigateToUrl()">
-          <button onclick="navigateToUrl()" style="padding:8px 14px;border-radius:8px;border:none;background:#007aff;color:#fff;font-size:12px;cursor:pointer;">前往</button>
+        <div class="browser-url-bar keyboard-anchor" style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;">
+          <input type="text" id="urlInput" class="ui-field ui-field-compact ui-field-mono" value="${urlValue}" placeholder="输入网址…" onkeydown="if(event.key==='Enter')navigateToUrl()">
+          <button class="ui-action ui-action-compact" onclick="navigateToUrl()">前往</button>
         </div>
         <div class="browser-tabs">
           <div class="browser-tab active" onclick="showBrowserTab('history')">历史记录</div>
@@ -522,9 +532,9 @@ function renderAdminLogin() {
         </div>
         <div style="padding:24px 16px;">
           <p style="color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:20px;">管理员登录</p>
-          <input type="text" id="adminUser" placeholder="用户名" style="display:block;width:100%;padding:10px 14px;margin-bottom:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;">
-          <input type="text" id="adminPass" placeholder="密码" style="display:block;width:100%;padding:10px 14px;margin-bottom:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;" onkeydown="if(event.key==='Enter')checkAdminLogin()">
-          <button onclick="checkAdminLogin()" style="width:100%;padding:10px;border-radius:10px;border:none;background:#007aff;color:#fff;font-size:14px;cursor:pointer;">登录</button>
+          <input type="text" id="adminUser" class="ui-field" placeholder="用户名" style="display:block;margin-bottom:12px;">
+          <input type="text" id="adminPass" class="ui-field" placeholder="密码" style="display:block;margin-bottom:16px;" onkeydown="if(event.key==='Enter')checkAdminLogin()">
+          <button class="ui-action ui-action-full" onclick="checkAdminLogin()">登录</button>
           <div style="margin-top:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;">
             💡 密码提示：带你来到这里的人
           </div>
@@ -603,7 +613,7 @@ function renderWebsiteSearch() {
           <div class="webpage-url">radio879.com/search${GameState.memberLoggedIn ? ' — 🟢 会员已登录' : ''}</div>
         </div>
         <div class="snoop-view">
-          <div class="snoop-search-bar">
+          <div class="snoop-search-bar keyboard-anchor">
             <input type="text" class="snoop-input" id="siteSearchInput" placeholder="搜索电台资料库…"
               onkeydown="if(event.key==='Enter')websiteSearch()">
             <button class="snoop-btn" onclick="websiteSearch()">搜索</button>
@@ -722,9 +732,9 @@ function renderMemberLogin(forcePrompt) {
           <p style="color:rgba(255,255,255,0.25);font-size:11px;margin-bottom:16px;line-height:1.6;">
             欢迎使用 87.9 会员系统。请使用您的听众编号登录以查看详细信息。
           </p>
-          <input type="text" id="memberUser" placeholder="用户名（听众编号）" style="display:block;width:100%;padding:10px 14px;margin-bottom:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;">
-          <input type="password" id="memberPass" placeholder="密码" style="display:block;width:100%;padding:10px 14px;margin-bottom:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;" onkeydown="if(event.key==='Enter')checkMemberLogin()">
-          <button onclick="checkMemberLogin()" style="width:100%;padding:10px;border-radius:10px;border:none;background:#007aff;color:#fff;font-size:14px;cursor:pointer;">登录</button>
+          <input type="text" id="memberUser" class="ui-field" placeholder="用户名（听众编号）" style="display:block;margin-bottom:12px;">
+          <input type="password" id="memberPass" class="ui-field" placeholder="密码" style="display:block;margin-bottom:16px;" onkeydown="if(event.key==='Enter')checkMemberLogin()">
+          <button class="ui-action ui-action-full" onclick="checkMemberLogin()">登录</button>
           <div id="memberError" style="color:#ff3b30;font-size:12px;margin-top:10px;text-align:center;"></div>
           <div style="margin-top:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:11px;color:rgba(255,255,255,0.25);line-height:1.6;">
             ${hint}
@@ -821,9 +831,9 @@ function renderMemberLogin(forcePrompt) {
           <p style="color:rgba(255,255,255,0.25);font-size:11px;margin-bottom:16px;line-height:1.6;">
             欢迎使用 87.9 会员系统。请输入您的听众编号与推荐人编号，以查看详细资料。
           </p>
-          <input type="text" id="memberUser" placeholder="账号（听众编号）" style="display:block;width:100%;padding:10px 14px;margin-bottom:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;">
-          <input type="password" id="memberPass" placeholder="密码" style="display:block;width:100%;padding:10px 14px;margin-bottom:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;" onkeydown="if(event.key==='Enter')checkMemberLogin()">
-          <button id="memberLoginButton" onclick="checkMemberLogin()" style="width:100%;padding:10px;border-radius:10px;border:none;background:#007aff;color:#fff;font-size:14px;cursor:pointer;">登录</button>
+          <input type="text" id="memberUser" class="ui-field" placeholder="账号（听众编号）" style="display:block;margin-bottom:12px;">
+          <input type="password" id="memberPass" class="ui-field" placeholder="密码" style="display:block;margin-bottom:16px;" onkeydown="if(event.key==='Enter')checkMemberLogin()">
+          <button id="memberLoginButton" class="ui-action ui-action-full" onclick="checkMemberLogin()">登录</button>
           <div id="memberError" style="color:#ff3b30;font-size:12px;margin-top:10px;text-align:center;"></div>
           <div style="margin-top:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:11px;color:rgba(255,255,255,0.25);line-height:1.6;">
             ${hint}
@@ -1012,7 +1022,7 @@ function renderWebsiteSearch() {
           ${getRadioAuthAction('search')}
         </div>
         <div class="snoop-view">
-          <div class="snoop-search-bar">
+          <div class="snoop-search-bar keyboard-anchor">
             <input type="text" class="snoop-input" id="siteSearchInput" placeholder="搜索电台资料库..."
               onkeydown="if(event.key==='Enter')websiteSearch()">
             <button class="snoop-btn" onclick="websiteSearch()">搜索</button>
@@ -1410,9 +1420,9 @@ function showPasswordCallScreen(number) {
         <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:16px;" id="callStatus">呼叫中...</div>
         <div id="callMessages" style="width:100%;flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;"></div>
         <div id="passwordArea" style="display:none;width:100%;max-width:240px;margin-bottom:8px;">
-          <div style="display:flex;gap:8px;">
-            <input type="text" id="passwordInput" placeholder="输入口令" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;text-align:center;" onkeydown="if(event.key==='Enter')checkCallPassword()">
-            <button onclick="checkCallPassword()" style="padding:10px 18px;border-radius:10px;border:none;background:#007aff;color:#fff;font-size:13px;cursor:pointer;">确认</button>
+          <div class="keyboard-anchor">
+            <input type="text" id="passwordInput" class="ui-field ui-field-center" placeholder="输入口令" onkeydown="if(event.key==='Enter')checkCallPassword()">
+            <button class="ui-action" onclick="checkCallPassword()">确认</button>
           </div>
           <div id="passwordError" style="color:#ff3b30;font-size:12px;margin-top:8px;min-height:18px;text-align:center;"></div>
         </div>

@@ -11,14 +11,16 @@ const APPS = [
 ];
 
 const DOCK_APPS = ['messages', 'radio', 'browser', 'phone'];
-const PHONE_BASE_WIDTH = 320;
-const PHONE_BASE_HEIGHT = 680;
+const PHONE_BASE_WIDTH = 370.5;
+const PHONE_BASE_HEIGHT = 809.5;
 const DEVICE_MOBILE_CLASS = 'device-mobile';
 const DEVICE_DESKTOP_CLASS = 'device-desktop';
 const FLOATING_KEYBOARD_MARGIN = 12;
 
 let activeMobileInput = null;
 let activeMobileInputStyle = '';
+let activeKeyboardAnchor = null;
+let activeKeyboardAnchorStyle = '';
 let keyboardHandlingBound = false;
 let baseMobileViewportHeight = 0;
 
@@ -56,8 +58,11 @@ function applyPhoneViewportLayout() {
   container.style.zIndex = '1';
   container.style.margin = '0';
   container.style.display = 'block';
+  frame.style.setProperty('--shell-scale', '1');
 
   if (isMobile) {
+    const shellScale = Math.max(0.7, window.innerWidth / PHONE_BASE_WIDTH);
+    frame.style.setProperty('--shell-scale', String(shellScale));
     if (!baseMobileViewportHeight || keyboardHeight <= 120) {
       baseMobileViewportHeight = viewportHeight;
     }
@@ -66,6 +71,8 @@ function applyPhoneViewportLayout() {
     container.style.left = '0';
     container.style.top = '0';
     container.style.width = '100vw';
+    container.style.minWidth = '100vw';
+    container.style.maxWidth = '100vw';
     container.style.height = `${baseMobileViewportHeight}px`;
     container.style.transform = 'none';
     container.style.transformOrigin = 'top left';
@@ -74,16 +81,22 @@ function applyPhoneViewportLayout() {
     frame.style.top = '0';
     frame.style.left = '0';
     frame.style.width = '100%';
+    frame.style.minWidth = '100%';
+    frame.style.maxWidth = '100%';
     frame.style.height = '100%';
     frame.style.transform = 'none';
     frame.style.transformOrigin = 'top left';
   } else {
     const shellWidth = Math.round((viewportHeight * PHONE_BASE_WIDTH) / PHONE_BASE_HEIGHT);
+    const shellScale = shellWidth / PHONE_BASE_WIDTH;
+    frame.style.setProperty('--shell-scale', String(shellScale));
 
     container.style.position = 'fixed';
     container.style.left = '50%';
     container.style.top = '0';
     container.style.width = `${shellWidth}px`;
+    container.style.minWidth = `${shellWidth}px`;
+    container.style.maxWidth = `${shellWidth}px`;
     container.style.height = `${viewportHeight}px`;
     container.style.transform = 'translateX(-50%)';
     container.style.transformOrigin = 'top center';
@@ -92,6 +105,8 @@ function applyPhoneViewportLayout() {
     frame.style.top = '0';
     frame.style.left = '0';
     frame.style.width = '100%';
+    frame.style.minWidth = '100%';
+    frame.style.maxWidth = '100%';
     frame.style.height = '100%';
     frame.style.transform = 'none';
     frame.style.transformOrigin = 'top center';
@@ -105,19 +120,26 @@ function isKeyboardEligibleField(element) {
   return element.matches('input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="range"]):not([type="color"]):not([type="file"]), textarea, select');
 }
 
-function clearMobileInputAnchor(preserveActiveField) {
-  if (!activeMobileInput) return;
+function getKeyboardAnchorTarget(element) {
+  if (!element || !(element instanceof HTMLElement)) return element;
+  return element.closest('.keyboard-anchor') || element;
+}
 
-  activeMobileInput.style.cssText = activeMobileInputStyle;
-  activeMobileInput.classList.remove('keyboard-floating-field');
+function clearMobileInputAnchor(preserveActiveField) {
+  if (activeKeyboardAnchor) {
+    activeKeyboardAnchor.style.cssText = activeKeyboardAnchorStyle;
+    activeKeyboardAnchor.classList.remove('keyboard-floating-anchor');
+  }
   if (!preserveActiveField) {
     activeMobileInput = null;
     activeMobileInputStyle = '';
+    activeKeyboardAnchor = null;
+    activeKeyboardAnchorStyle = '';
   }
 }
 
 function updateMobileKeyboardAnchor() {
-  if (!isMobileGameDevice() || !activeMobileInput || !window.visualViewport) return;
+  if (!isMobileGameDevice() || !activeMobileInput || !activeKeyboardAnchor || !window.visualViewport) return;
 
   const viewport = window.visualViewport;
   const keyboardHeight = getVirtualKeyboardHeight();
@@ -127,24 +149,31 @@ function updateMobileKeyboardAnchor() {
     return;
   }
 
-  const rect = activeMobileInput.getBoundingClientRect();
+  const rect = activeKeyboardAnchor.getBoundingClientRect();
+  const visibleBottom = viewport.height - FLOATING_KEYBOARD_MARGIN;
+  const isObscured = rect.bottom > visibleBottom;
+  if (!isObscured) {
+    clearMobileInputAnchor(true);
+    return;
+  }
+
   const width = Math.min(Math.max(rect.width, 220), window.innerWidth - (FLOATING_KEYBOARD_MARGIN * 2));
   const left = Math.min(
     Math.max(FLOATING_KEYBOARD_MARGIN, rect.left),
     window.innerWidth - width - FLOATING_KEYBOARD_MARGIN
   );
 
-  activeMobileInput.classList.add('keyboard-floating-field');
-  activeMobileInput.style.position = 'fixed';
-  activeMobileInput.style.left = `${left}px`;
-  activeMobileInput.style.right = 'auto';
-  activeMobileInput.style.bottom = `${keyboardHeight + FLOATING_KEYBOARD_MARGIN}px`;
-  activeMobileInput.style.top = 'auto';
-  activeMobileInput.style.width = `${width}px`;
-  activeMobileInput.style.maxWidth = `calc(100vw - ${FLOATING_KEYBOARD_MARGIN * 2}px)`;
-  activeMobileInput.style.margin = '0';
-  activeMobileInput.style.zIndex = '3000';
-  activeMobileInput.style.transform = 'none';
+  activeKeyboardAnchor.classList.add('keyboard-floating-anchor');
+  activeKeyboardAnchor.style.position = 'fixed';
+  activeKeyboardAnchor.style.left = `${left}px`;
+  activeKeyboardAnchor.style.right = 'auto';
+  activeKeyboardAnchor.style.bottom = `${keyboardHeight + FLOATING_KEYBOARD_MARGIN}px`;
+  activeKeyboardAnchor.style.top = 'auto';
+  activeKeyboardAnchor.style.width = `${width}px`;
+  activeKeyboardAnchor.style.maxWidth = `calc(100vw - ${FLOATING_KEYBOARD_MARGIN * 2}px)`;
+  activeKeyboardAnchor.style.margin = '0';
+  activeKeyboardAnchor.style.zIndex = '3000';
+  activeKeyboardAnchor.style.transform = 'none';
 }
 
 function bindMobileKeyboardHandling() {
@@ -157,10 +186,12 @@ function bindMobileKeyboardHandling() {
     clearMobileInputAnchor(false);
     activeMobileInput = event.target;
     activeMobileInputStyle = activeMobileInput.style.cssText;
+    activeKeyboardAnchor = getKeyboardAnchorTarget(activeMobileInput);
+    activeKeyboardAnchorStyle = activeKeyboardAnchor.style.cssText;
 
     window.setTimeout(() => {
       updateMobileKeyboardAnchor();
-    }, 80);
+    }, 220);
   }, true);
 
   document.addEventListener('focusout', (event) => {
@@ -188,7 +219,6 @@ function renderPhoneShell() {
   app.innerHTML = `
     <div class="phone-container" id="phoneContainer">
       <div class="phone-frame" id="phoneFrame">
-        <div class="phone-notch"></div>
         <div class="phone-screen">
           <div class="status-bar">
             <div class="status-left">
